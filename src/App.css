@@ -1,0 +1,68 @@
+body{
+  background: #e8e8e8;
+  padding: 0px;
+  margin: 0px;
+}
+.app-sidebar{
+  width: 250px;
+  height: 100vh;
+  padding: 10px;
+  padding-top: 70px;
+  background: #892352;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  /*box-shadow: 5px 0px 16px rgba(0,0,0,.2);*/
+  z-index: 9;
+  border-right: 1px solid #6e1840;
+}
+.sidebar-right{
+  right: 0px;
+  left: auto;
+  background: #f1f1f1;
+}
+.app-body{
+  background: #dedede;
+  width: calc(100vw - 500px);
+  height: 100vh;
+  left: 250px;
+  position: absolute;
+  padding-top: 60px;
+}
+.app-header{
+  width: 100%;
+  height: 60px;
+  background: #e8e8e8;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 10;
+}
+.block{
+  display: inline-block;
+  margin: 8px;
+  margin-bottom: 0px;
+  width: 60px;
+  height: auto;
+  float: left;
+}
+.block-icon{
+  width: 60px;
+  height: 60px;
+  background: #af346c;
+  border-radius: 4px;
+}
+.block-label{
+  font-size: 11px;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  width: 100%;
+  float: left;
+  margin-top: 2px;
+}
+.droppable{
+  width: 300px;
+  height: 300px;
+  background: #fac769;
+}
