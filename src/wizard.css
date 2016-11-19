@@ -52,6 +52,21 @@
     background-color: #2c80d0;
     color: #fff;
 }
+.wizard-add-step{
+  background: none;
+  border: 2px dashed #17446f;
+  color: #17446f;
+  padding-top: 2px;
+  outline: none;
+  /*transition: none;*/
+}
+.wizard-add-step:hover{
+  background: #17446f;
+  /*border-color: #17446f;*/
+  color: #19223c;
+  padding-top: 2px;
+  transition: none;
+}
 .wizard-section {
     padding: 15px;
     position: relative;
@@ -74,4 +89,9 @@ h4.section-title {
     border-radius: 3px;
     background-color: #235789;
     content: "";
+}
+.drop-target{
+  width: 100%;
+  height: 60px;
+  background: #ddd;
 }

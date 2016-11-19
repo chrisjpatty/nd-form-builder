@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import './bootstrap.min.css';
 import './App.css';
@@ -17,16 +18,6 @@ var App = React.createClass({
       wizard: data.wizard,
       activeView: 1
     }
-  },
-  onDragOver: function(e){
-    e.preventDefault();
-  },
-  onDragEnter: function(e){
-    e.preventDefault();
-  },
-  drop: function(e){
-    e.preventDefault();
-    console.log(JSON.parse(e.dataTransfer.getData("text")));
   },
   getViewData: function(){
       var data = this.state.wizard;
@@ -54,7 +45,7 @@ var App = React.createClass({
             })
           }
         </div>
-        <div className="app-body" onDragOver={this.onDragOver} onDragEnter={this.onDragEnter} onDrop={this.drop}>
+        <div className="app-body">
           <div className="wizard">
             <div className="wizard-sidebar">
               {
@@ -62,6 +53,7 @@ var App = React.createClass({
                   return <Step step={step} key={i}/>
                 })
               }
+              <button className="wizard-step wizard-add-step">+ Add a new step</button>
             </div>
             <div className="wizard-body">
               <WizardBody data={this.getViewData()}/>
@@ -117,10 +109,47 @@ var WizardBody = React.createClass({
 })
 
 var Section = React.createClass({
+  getInitialState: function(){
+    return{
+      showTarget: false
+    }
+  },
+  onDragOver: function(e){
+    e.preventDefault();
+  },
+  onDragEnter: function(e){
+    e.preventDefault();
+    this.setState({
+      showTarget: true
+    })
+  },
+  onDragLeave: function(e){
+    e.preventDefault();
+    var targetClass = document.elementFromPoint(e.pageX, e.pageY).className;
+    //console.log(targetClass);
+    if(targetClass != "drop-target" && targetClass != "section-title" && targetClass != "wizard-section"){
+      this.setState({
+        showTarget: false
+      })
+    }
+  },
+  drop: function(e){
+    e.preventDefault();
+    console.log(JSON.parse(e.dataTransfer.getData("text")));
+    this.setState({
+      showTarget: false
+    })
+  },
   render: function(){
     return(
-      <div className="wizard-section">
+      <div className="wizard-section" onDragOver={this.onDragOver} onDragEnter={this.onDragEnter} onDragLeave={this.onDragLeave} onDrop={this.drop}>
         <h4 className="section-title">{this.props.section.title}</h4>
+        {
+          this.state.showTarget ?
+          <div className="drop-target">adsfasdf</div>
+          :
+          null
+        }
       </div>
     )
   }
