@@ -78,6 +78,8 @@ h4.section-title {
     font-weight: bold;
     color: #235789;
     margin-top: 5px;
+    margin-bottom: 10px;
+    line-height: 1.1;
 }
 .wizard-section::after {
     position: absolute;
@@ -93,5 +95,198 @@ h4.section-title {
 .drop-target{
   width: 100%;
   height: 60px;
-  background: #ddd;
+  background: #dedede;
+  border-radius: 6px;
+  text-align: center;
+  padding-top: 17px;
+  font-weight: bold;
+  font-size: 18px;
+  color: #999;
+  border: 4px dashed #ccc;
+  clear: both;
+}
+.body-field-wrapper{
+    margin-bottom: 10px;
+    float: left;
+    margin-right: 10px;
+}
+.body-text-field input{
+    clear: both;
+    float: left;
+    width: 100%;
+    border: 3px solid #c3c3c3;
+    border-radius: 5px;
+    height: 35px;
+    padding-left: 6px;
+    font-weight: bold;
+    color: #888888;
+    transition: all .2s;
+    outline: none;
+    position: relative;
+    display: block;
+    padding-right: 27px;
+}
+.body-text-field input:focus{
+    border-color: #2c80d0 !important;
+    width: calc(100% + 8px);
+}
+.body-field-wrapper label{
+    clear: both;
+    float: left;
+    margin-bottom: -2px;
+    margin-left: 2px;
+    color: #888888;
+    font-weight: bold;
+}
+.body-field-wrapper select{
+    clear: both;
+    float: left;
+    width: 100%;
+    border: 3px solid #c3c3c3;
+    border-radius: 5px;
+    height: 35px;
+    padding-left: 6px;
+    font-weight: bold;
+    color: #888888;
+    transition: all .2s;
+    outline: none;
+}
+.body-check-field .input-wrapper{
+    float: left;
+    width: 24px;
+    height: 24px;
+    border: 3px solid #c3c3c3;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #888888;
+    transition: all .2s;
+    outline: none;
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+.body-check-field input:checked + .input-wrapper::after{
+    content: "";
+    top: 3px;
+    left: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: #2c80d0;
+    position: absolute;
+    display: block;
+    -webkit-font-smoothing: antialiased;
+    -webkit-animation-duration: .3s;
+    animation-duration: .3s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: zoomIn;
+    animation-name: zoomIn;
+}
+.body-check-field input{
+    display: none;
+}
+.body-check-field .text-label{
+    clear: none;
+    max-width: 420px;
+    margin-left: 6px;
+    margin-top: 2px;
+}
+.draft-button{
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    width: 166px;
+    margin-left: -83px;
+    border: none;
+    border-radius: 6px;
+    background: #ffbc42;
+    height: 30px;
+    font-weight: bold;
+    color: #fff;
+}
+.text-label{
+    position: relative;
+}
+.required::after{
+    content: "*";
+    color: #c1292e;
+    font-size: 18px;
+    position: absolute;
+    right: -11px;
+    top: 1px;
+    font-weight: bold;
+}
+.body-text-field .input-wrapper{
+    position: relative;
+    float: left;
+    width: 100%;
+}
+.body-text-field .input-wrapper.valid input{
+    border-color: #5abc4f;
+}
+.body-text-field .input-wrapper.valid::after{
+    content: "\e013";
+    position: absolute;
+    top: 7px;
+    right: 9px;
+    font-size: 18px;
+    color: #5abc4f;
+    display: block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -webkit-animation-duration: .6s;
+    animation-duration: .6s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fadeInRight;
+    animation-name: fadeInRight;
+}
+.body-text-field .input-wrapper.invalid input{
+    border-color: #c1292e;
+}
+.body-text-field .input-wrapper.invalid::after{
+    content: "\e014";
+    position: absolute;
+    top: 8px;
+    right: 9px;
+    font-size: 18px;
+    color: #c1292e;
+    display: block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -webkit-animation-duration: .6s;
+    animation-duration: .6s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fadeInRight;
+    animation-name: fadeInRight;
+}
+.add-section{
+  width: 469px;
+  height: 30px;
+  border-radius: 6px;
+  background: #fff;
+  clear: both;
+  float: left;
+  text-align: center;
+  margin: 0px 15px;
+  display: block;
+  margin-top: 10px;
+  padding-top: 2px;
+  font-weight: bold;
+  position: relative;
+  color: #b1b1b1;
+  border: 2px dashed #d0d0d0;
+  cursor: pointer;
+  transition: background .2s;
+}
+.add-section:hover{
+  background: #e6e6e6;
 }

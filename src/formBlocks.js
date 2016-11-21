@@ -11,13 +11,16 @@ function Field(construct){
   this.required = construct.required || false;
   this.allowedValues = construct.allowedValues || "all";
   this.isValid = construct.isValid || null;
+  if(construct.type == "select"){
+    this.options = construct.options || [];
+  }
 }
 
 var formBlocks = [
   {
     id: 1,
     label: "Text Input",
-    icon: "text",
+    icon: "glyphicon-text-size",
     color: "#3f80bf",
     fields: [
       new Field()
@@ -26,10 +29,10 @@ var formBlocks = [
   {
     id: 2,
     label: "Checkbox",
-    icon: "check",
+    icon: "glyphicon-check",
     color: "#3f80bf",
     fields: [
-      new Field({type: "checkbox", value: "false"})
+      new Field({type: "check", value: "false"})
     ]
   },
   {
@@ -47,7 +50,7 @@ var formBlocks = [
     icon: "dropdown",
     color: "#3f80bf",
     fields: [
-      new Field({type: "select", value: "false"})
+      new Field({type: "select", value: "false", options: ["Domestic Limited Liability Corporation","Foreign Limited Liability Corporation","Sole Proprietorship"]})
     ]
   }
 ]
