@@ -61,9 +61,8 @@
   /*transition: none;*/
 }
 .wizard-add-step:hover{
-  background: #17446f;
+  background: #1f345d;
   /*border-color: #17446f;*/
-  color: #19223c;
   padding-top: 2px;
   transition: none;
 }

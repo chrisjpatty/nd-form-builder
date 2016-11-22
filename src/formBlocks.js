@@ -1,3 +1,4 @@
+/* eslint-disable */
 function Field(construct){
   construct = construct || {};
   this.fieldId = construct.id || 0;

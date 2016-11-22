@@ -2,6 +2,10 @@ body{
   background: #e8e8e8;
   padding: 0px;
   margin: 0px;
+  font-family: "Open Sans", sans-serif;
+}
+div, label, input, span, table{
+  font-family: "Open Sans", sans-serif;
 }
 .app-sidebar{
   width: 250px;
@@ -20,6 +24,7 @@ body{
   right: 0px;
   left: auto;
   background: #f1f1f1;
+  border-right: none;
 }
 .app-body{
   background: #dedede;
