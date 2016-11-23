@@ -17,6 +17,7 @@ function Field(construct){
   if(construct.type == "select"){
     this.options = construct.options || [];
   }
+  this.editing = construct.active || false;
 }
 
 var formBlocks = [
@@ -90,6 +91,7 @@ var wizard = [
         title: "Section Title",
         type: "custom",
         sectionId: shortid.generate(),
+        editing: false,
         fields: [
 
         ]

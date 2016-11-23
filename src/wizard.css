@@ -87,10 +87,10 @@ h4.section-title {
     cursor: pointer;
 }
 h4.section-title:hover{
-  background: #ffeea6;
+  background: #fff8da;
 }
-h4.section-title.active{
-  background: #ffd7a1;
+h4.section-title.editing{
+  background: #ffeea6;
 }
 .wizard-section::after {
     position: absolute;
@@ -124,8 +124,12 @@ h4.section-title.active{
   margin-top: -5px;
   padding: 5px;
   border-radius: 6px;
+  cursor: pointer;
 }
 .body-field-wrapper:hover{
+  background: #fff6cd;
+}
+.body-field-wrapper.editing{
   background: #ffeea6;
 }
 .body-text-field input{
@@ -143,6 +147,7 @@ h4.section-title.active{
     position: relative;
     display: block;
     padding-right: 27px;
+    cursor: pointer;
 }
 .body-field-wrapper label{
     clear: both;
@@ -151,6 +156,7 @@ h4.section-title.active{
     margin-left: 2px;
     color: #888888;
     font-weight: bold;
+    cursor: pointer;
 }
 .body-field-wrapper select{
     clear: both;

@@ -27,6 +27,32 @@ var App = React.createClass({
       propObj: null
     }
   },
+  setView: function(itemId){
+    var wizard = this.state.wizard;
+
+    wizard = wizard.filter(function(item){
+        if(item.itemId == itemId){
+          item.active = true;
+        }else{
+          item.active = false;
+        }
+        item.sections.filter(function(section){
+          section.editing = false;
+          section.fields.filter(function(field){
+            field.editing = false;
+            return field;
+          })
+          return section;
+        })
+        return item;
+    })
+
+    this.setState({
+      wizard: wizard,
+      activeView: itemId,
+      propObj: {type: "item", itemId: itemId}
+    })
+  },
   getViewData: function(){
       var data = this.state.wizard;
       var found = null;
@@ -84,12 +110,6 @@ var App = React.createClass({
       wizard: wizard
     })
   },
-  setView: function(itemId){
-    this.setState({
-      activeView: itemId,
-      propObj: null
-    })
-  },
   setPropObj: function(propertyObj){
     //console.log(propertyObj)
     this.setState({
@@ -102,16 +122,48 @@ var App = React.createClass({
     var propObj = this.state.propObj || {};
 
     switch (propObj.type) {
+      case "item":
+        var found;
+        wizard = wizard.filter(function(item){
+          if(item.itemId == itemId){
+            found = item;
+          }
+        })
+        var mapped = {
+          type: "item",
+          itemId: itemId,
+          sectionId: propObj.sectionId,
+          fields: [
+            {
+              label: "Title",
+              key: "viewLabel",
+              id: found.itemId,
+              type: "text",
+              value: found.viewLabel
+            }
+          ]
+        }
+        return mapped;
+        break;
       case "section":
         var found;
-        wizard.filter(function(item){
+        wizard = wizard.filter(function(item){
           if(item.itemId == itemId){
             item.sections.filter(function(section){
               if(section.sectionId == propObj.sectionId){
                 found = section;
+                section.editing = true;
+                section.fields.filter(function(field){
+                  field.editing = false;
+                  return field;
+                })
+              }else{
+                section.editing = false;
               }
+              return section;
             })
           }
+          return item;
         })
         var mapped = {
           type: "section",
@@ -138,21 +190,28 @@ var App = React.createClass({
           fieldId: propObj.fieldId,
           fields: []
         }
-        wizard.filter(function(item){
+        wizard = wizard.filter(function(item){
           if(item.itemId == itemId){
             item.sections.filter(function(section){
+              section.editing = false;
               if(section.sectionId == propObj.sectionId){
                 section.fields.filter(function(field){
                   if(field.fieldId == propObj.fieldId){
                     found = field;
+                    field.editing = true;
+                  }else{
+                    field.editing = false;
                   }
+                  return field;
                 })
               }
+              return section;
             })
           }
+          return item;
         })
         $.each(found, function(k, v){
-          if(k != "fieldId" && k != "type" && k != "isValid"){
+          if(k != "fieldId" && k != "type" && k != "isValid" && k != "editing"){
             switch (found.type) {
               case "text":
                 var field = {
@@ -186,11 +245,22 @@ var App = React.createClass({
       default:
         return null;
     }
+    this.setState({
+      wizard: wizard
+    })
   },
   setProperty: function(prop){
     var wizard = this.state.wizard;
     // console.log(prop);
     switch (prop.type) {
+      case "item":
+        wizard = wizard.filter(function(item){
+          if(item.itemId == prop.itemId){
+            item[prop.key] = prop.value;
+          }
+          return item;
+        })
+        break;
       case "section":
         wizard = wizard.filter(function(item){
           if(item.itemId == prop.itemId){
@@ -293,7 +363,7 @@ var Step = React.createClass({
   },
   render: function(){
     return(
-      <button className="wizard-step" onClick={this.setView}>{this.props.step.viewLabel}</button>
+      <button className={"wizard-step " + (this.props.step.active ? "active " : "")} onClick={this.setView}>{this.props.step.viewLabel}</button>
     )
   }
 })
@@ -441,7 +511,7 @@ var Section = React.createClass({
     var noPointer = {pointerEvents: this.state.pointerEvents};
     return(
       <div className="wizard-section" onDragOver={this.onDragOver} onDragEnter={this.onDragEnter} onDragLeave={this.onDragLeave} onDrop={this.drop}>
-        <h4 className={"section-title " + this.state.active} onClick={this.setPropObj} style={noPointer}>{this.props.section.title}</h4>
+        <h4 className={"section-title " + (this.props.section.editing ? "editing " : "")} onClick={this.setPropObj} style={noPointer}>{this.props.section.title}</h4>
         <div style={noPointer}>
         {
           this.props.section.fields.length > 0 ?
@@ -483,7 +553,7 @@ var Field = React.createClass({
         switch (field.type) {
             case "text":
                 return (
-                    <div className="body-field-wrapper body-text-field" onClick={this.setPropObj} style={style}>
+                    <div className={"body-field-wrapper body-text-field " + (field.editing ? "editing " : "")} onClick={this.setPropObj} style={style}>
                         <label className={field.required ? "text-label required" : "text-label " } >{field.label}</label>
                         <span className={"input-wrapper " + valid}>
                             <input type="text" value={field.value} readOnly />
@@ -494,7 +564,7 @@ var Field = React.createClass({
             case "conditionalCheck":
             case "check":
                 return (
-                    <div className="body-field-wrapper body-check-field" onClick={this.setPropObj} style={style}>
+                    <div className={"body-field-wrapper body-check-field " + (field.editing ? "editing " : "")} onClick={this.setPropObj} style={style}>
                         <input type="checkbox" id={field.conditionalId} value={field.value} checked={field.value} readOnly />
                         <label className={"input-wrapper " + valid} htmlFor={field.conditionalId}></label>
                         <label className={field.required ? "text-label required" : "text-label " }>{field.label}</label>
@@ -503,7 +573,7 @@ var Field = React.createClass({
                 break;
             case "select":
                 return (
-                    <div className="body-field-wrapper body-select-field" onClick={this.setPropObj} style={style} readOnly>
+                    <div className={"body-field-wrapper body-select-field " + (field.editing ? "editing " : "")} onClick={this.setPropObj} style={style} readOnly>
                         <label className="text-label">{field.label}</label>
                         <select>
                             {
@@ -544,6 +614,7 @@ function SectionObject(construct){
   this.title = construct.title || "Section Title";
   this.type = construct.type || "custom";
   this.sectionId = construct.sectionId || shortid.generate();
+  this.editing = construct.editing || false;
   this.fields = construct.fields || [];
   sectionIterator++;
 }
