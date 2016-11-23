@@ -5,6 +5,7 @@
   width: 100%;
   float: left;
   clear: both;
+  margin-bottom: 8px;
 }
 .prop label{
   width: 100%;
@@ -31,4 +32,37 @@
 }
 .prop .prop-text:focus{
   border-color: #2c80d0 !important;
+}
+.prop-check{
+  display: none;
+}
+.prop-check + .input-wrapper{
+  float: left;
+  width: 24px;
+  height: 24px;
+  border: 3px solid #c3c3c3;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #888888;
+  -webkit-transition: all .2s;
+  transition: all .2s;
+  outline: none;
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+.prop-check:checked + .input-wrapper::after {
+  content: "";
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: #2c80d0;
+  position: absolute;
+  display: block;
+  -webkit-font-smoothing: antialiased;
+  animation-duration: .3s;
+  animation-fill-mode: both;
+  animation-name: zoomIn;
 }

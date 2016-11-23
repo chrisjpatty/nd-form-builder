@@ -7,6 +7,7 @@ import './sidebar.css';
 import data from './formBlocks.js';
 import 'animate.css';
 var shortid = require('shortid');
+import $ from "jquery";
 //import wizard from './formBlocks.js';
 // var DragDropContext = require('react-dnd').DragDropContext;
 // var HTML5Backend = require('react-dnd-html5-backend');
@@ -15,7 +16,7 @@ var shortid = require('shortid');
 // import './bootstrap/js/bootstrap.js';
 var sectionIterator = 2;
 var itemIterator = 2;
-
+console.log(data);
 var App = React.createClass({
   getInitialState: function(){
     return{
@@ -40,16 +41,14 @@ var App = React.createClass({
   addFields: function(fields){
     var wizard = this.state.wizard;
     var capture = this;
-
     wizard = wizard.filter(function(item){
       if(item.itemId == capture.state.activeView){
         item.sections.filter(function(section){
           if(section.sectionId == fields.sectionId){
-            var addId = fields.fields.filter(function(field){
+            fields.fields.filter(function(field){
               field.fieldId = shortid.generate();
-              return field;
+              section.fields.push(field);
             })
-            section.fields.push(addId);
           }
           return section;
         })
@@ -92,7 +91,7 @@ var App = React.createClass({
     })
   },
   setPropObj: function(propertyObj){
-    console.log(propertyObj)
+    //console.log(propertyObj)
     this.setState({
       propObj: propertyObj
     })
@@ -130,6 +129,60 @@ var App = React.createClass({
         }
         return mapped;
         break;
+      case "field":
+        var found;
+        var mapped = {
+          type: "field",
+          itemId: itemId,
+          sectionId: propObj.sectionId,
+          fieldId: propObj.fieldId,
+          fields: []
+        }
+        wizard.filter(function(item){
+          if(item.itemId == itemId){
+            item.sections.filter(function(section){
+              if(section.sectionId == propObj.sectionId){
+                section.fields.filter(function(field){
+                  if(field.fieldId == propObj.fieldId){
+                    found = field;
+                  }
+                })
+              }
+            })
+          }
+        })
+        $.each(found, function(k, v){
+          if(k != "fieldId" && k != "type" && k != "isValid"){
+            switch (found.type) {
+              case "text":
+                var field = {
+                  label: (k.charAt(0).toUpperCase() + k.slice(1)).replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1"),
+                  key: k,
+                  type: (k == "required" || k == "sizeOverride" ? "check" : "text"),
+                  value: (v == null ? "" : v)
+                }
+                break;
+              case "check":
+                var field = {
+                  label: (k == "value" ? "Checked" : (k.charAt(0).toUpperCase() + k.slice(1)).replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1")),
+                  key: k,
+                  type: (k == "value" || k == "required" || k == "sizeOverride" ? "check" : "text"),
+                  value: (v == null ? "" : v)
+                }
+                break;
+              default:
+                var field = {
+                  label: (k.charAt(0).toUpperCase() + k.slice(1)).replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1"),
+                  key: k,
+                  type: (k == "required" || k == "sizeOverride" ? "check" : "text"),
+                  value: (v == null ? "" : v)
+                }
+            }
+            mapped.fields.push(field);
+          }
+        })
+        return mapped;
+        break;
       default:
         return null;
     }
@@ -151,12 +204,32 @@ var App = React.createClass({
           return item;
         })
         break;
+      case "field":
+        wizard = wizard.filter(function(item){
+          if(item.itemId == prop.itemId){
+            item.sections.filter(function(section){
+              if(section.sectionId == prop.sectionId){
+                section.fields.filter(function(field){
+                  if(field.fieldId == prop.fieldId){
+                    field[prop.key] = prop.value;
+                  }
+                  return field;
+                })
+              }
+              return section;
+            })
+          }
+          return item;
+        })
+        break;
       default:
-
     }
     this.setState({
       wizard: wizard
     })
+  },
+  export: function(){
+    console.log(this.state.wizard)
   },
   render() {
     // console.log("formBlocks", data.formBlocks);
@@ -164,7 +237,7 @@ var App = React.createClass({
     return (
       <div className="container-fluid">
         <div className='app-header'>
-
+          <button onClick={this.export}>Export</button>
         </div>
         <div className="app-sidebar sidebar-left">
           {
@@ -254,6 +327,7 @@ var RightSidebar = React.createClass({
     prop.type = this.props.properties.type;
     prop.itemId = this.props.properties.itemId;
     prop.sectionId = this.props.properties.sectionId;
+    prop.fieldId = this.props.properties.fieldId;
     this.props.setProperty(prop);
   },
   render: function(){
@@ -275,11 +349,12 @@ var RightSidebar = React.createClass({
 
 var Property = React.createClass({
   setProperty: function(e){
-    this.props.setProperty({key: this.props.property.key, value: e.target.value});
+    var val = (this.props.property.type == "check" ? e.target.checked : e.target.value);
+    this.props.setProperty({key: this.props.property.key, value: val});
   },
   getField: function(){
     var props = this.props.property;
-    //console.log("Props", props.label);
+    //console.log("Props", props);
     switch (props.type) {
       case "text":
         return(
@@ -289,6 +364,15 @@ var Property = React.createClass({
           </div>
         )
         break;
+      case "check":
+        var id = shortid.generate();
+        return(
+          <div className="prop">
+          <label>{props.label}</label>
+          <input type="checkbox" id={id} className="prop-check" onChange={this.setProperty} checked={props.value}/>
+          <label className="input-wrapper" htmlFor={id}></label>
+          </div>
+        )
       default:
 
     }
@@ -360,9 +444,12 @@ var Section = React.createClass({
         <h4 className={"section-title " + this.state.active} onClick={this.setPropObj} style={noPointer}>{this.props.section.title}</h4>
         <div style={noPointer}>
         {
+          this.props.section.fields.length > 0 ?
           this.props.section.fields.map(function(field, i){
             return <Field field={field} setPropObj={this.setPropObj} key={i}/>
           }, this)
+          :
+          null
         }
         </div>
         {
@@ -378,7 +465,7 @@ var Section = React.createClass({
 
 var Field = React.createClass({
     getField: function(){
-        var field = this.props.field[0];
+        var field = this.props.field;
         // console.log("Field", field);
         // console.log(field.type);
         var style = {
@@ -407,7 +494,7 @@ var Field = React.createClass({
             case "conditionalCheck":
             case "check":
                 return (
-                    <div className="body-field-wrapper body-check-field" style={style}>
+                    <div className="body-field-wrapper body-check-field" onClick={this.setPropObj} style={style}>
                         <input type="checkbox" id={field.conditionalId} value={field.value} checked={field.value} readOnly />
                         <label className={"input-wrapper " + valid} htmlFor={field.conditionalId}></label>
                         <label className={field.required ? "text-label required" : "text-label " }>{field.label}</label>
@@ -416,7 +503,7 @@ var Field = React.createClass({
                 break;
             case "select":
                 return (
-                    <div className="body-field-wrapper body-select-field" style={style}>
+                    <div className="body-field-wrapper body-select-field" onClick={this.setPropObj} style={style} readOnly>
                         <label className="text-label">{field.label}</label>
                         <select>
                             {
@@ -430,7 +517,7 @@ var Field = React.createClass({
         }
     },
     setPropObj: function(){
-      this.props.setPropObj({type: "field", fieldId: this.props.field[0].fieldId});
+      this.props.setPropObj({type: "field", fieldId: this.props.field.fieldId});
     },
     render: function () {
         return(
@@ -454,9 +541,9 @@ function ItemObject(construct){
 
 function SectionObject(construct){
   construct = construct || {};
-  this.title = construct.title || "Section " + sectionIterator;
+  this.title = construct.title || "Section Title";
   this.type = construct.type || "custom";
-  this.sectionId = construct.sectionId || sectionIterator;
+  this.sectionId = construct.sectionId || shortid.generate();
   this.fields = construct.fields || [];
   sectionIterator++;
 }

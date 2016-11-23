@@ -47,6 +47,7 @@
   margin-right: auto;
   margin-left: auto;
   text-align: left;
+  outline: none;
 }
 .wizard-step.active {
     background-color: #2c80d0;
@@ -78,13 +79,15 @@ h4.section-title {
     color: #235789;
     margin-top: 0px;
     margin-bottom: 4px;
+    margin-left: -6px;
     line-height: 1.1;
     border-radius: 6px;
     padding: 6px 0px;
+    padding-left: 6px;
     cursor: pointer;
 }
 h4.section-title:hover{
-  background: #eec7d4;
+  background: #ffeea6;
 }
 h4.section-title.active{
   background: #ffd7a1;
@@ -114,9 +117,16 @@ h4.section-title.active{
   clear: both;
 }
 .body-field-wrapper{
-    margin-bottom: 10px;
-    float: left;
-    margin-right: 10px;
+  margin-bottom: 5px;
+  float: left;
+  margin-right: 5px;
+  margin-left: -5px;
+  margin-top: -5px;
+  padding: 5px;
+  border-radius: 6px;
+}
+.body-field-wrapper:hover{
+  background: #ffeea6;
 }
 .body-text-field input{
     clear: both;
@@ -133,10 +143,6 @@ h4.section-title.active{
     position: relative;
     display: block;
     padding-right: 27px;
-}
-.body-text-field input:focus{
-    border-color: #2c80d0 !important;
-    width: calc(100% + 8px);
 }
 .body-field-wrapper label{
     clear: both;
