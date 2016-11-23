@@ -76,9 +76,18 @@ h4.section-title {
     font-size: 18px;
     font-weight: bold;
     color: #235789;
-    margin-top: 5px;
-    margin-bottom: 10px;
+    margin-top: 0px;
+    margin-bottom: 4px;
     line-height: 1.1;
+    border-radius: 6px;
+    padding: 6px 0px;
+    cursor: pointer;
+}
+h4.section-title:hover{
+  background: #eec7d4;
+}
+h4.section-title.active{
+  background: #ffd7a1;
 }
 .wizard-section::after {
     position: absolute;

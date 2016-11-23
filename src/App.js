@@ -6,6 +6,7 @@ import './wizard.css';
 import './sidebar.css';
 import data from './formBlocks.js';
 import 'animate.css';
+var shortid = require('shortid');
 //import wizard from './formBlocks.js';
 // var DragDropContext = require('react-dnd').DragDropContext;
 // var HTML5Backend = require('react-dnd-html5-backend');
@@ -44,7 +45,11 @@ var App = React.createClass({
       if(item.itemId == capture.state.activeView){
         item.sections.filter(function(section){
           if(section.sectionId == fields.sectionId){
-            section.fields.push(fields.fields);
+            var addId = fields.fields.filter(function(field){
+              field.fieldId = shortid.generate();
+              return field;
+            })
+            section.fields.push(addId);
           }
           return section;
         })
@@ -87,6 +92,7 @@ var App = React.createClass({
     })
   },
   setPropObj: function(propertyObj){
+    console.log(propertyObj)
     this.setState({
       propObj: propertyObj
     })
@@ -303,7 +309,8 @@ var Section = React.createClass({
     return{
       showTarget: false,
       counter: 0,
-      pointerEvents: "all"
+      pointerEvents: "all",
+      active: ""
     }
   },
   onDragOver: function(e){
@@ -337,20 +344,25 @@ var Section = React.createClass({
     })
     this.props.addFields({fields: fields, sectionId: capture.props.section.sectionId});
   },
-  setPropObj: function(){
-    var props = this.props.section;
-    this.props.setPropObj({type: "section", sectionId: this.props.section.sectionId});
+  setPropObj: function(propObj){
+    var type = "section";
+    if(propObj.type != 'click')
+      type = propObj.type;
+    this.props.setPropObj({type: type, sectionId: this.props.section.sectionId, fieldId: propObj.fieldId});
+    // this.setState({
+    //   active: "active"
+    // })
   },
   render: function(){
     var noPointer = {pointerEvents: this.state.pointerEvents};
     return(
       <div className="wizard-section" onDragOver={this.onDragOver} onDragEnter={this.onDragEnter} onDragLeave={this.onDragLeave} onDrop={this.drop}>
-        <h4 className="section-title" onClick={this.setPropObj} style={noPointer}>{this.props.section.title}</h4>
+        <h4 className={"section-title " + this.state.active} onClick={this.setPropObj} style={noPointer}>{this.props.section.title}</h4>
         <div style={noPointer}>
         {
           this.props.section.fields.map(function(field, i){
-            return <Field field={field} key={i}/>
-          })
+            return <Field field={field} setPropObj={this.setPropObj} key={i}/>
+          }, this)
         }
         </div>
         {
@@ -384,7 +396,7 @@ var Field = React.createClass({
         switch (field.type) {
             case "text":
                 return (
-                    <div className="body-field-wrapper body-text-field" style={style}>
+                    <div className="body-field-wrapper body-text-field" onClick={this.setPropObj} style={style}>
                         <label className={field.required ? "text-label required" : "text-label " } >{field.label}</label>
                         <span className={"input-wrapper " + valid}>
                             <input type="text" value={field.value} readOnly />
@@ -417,6 +429,9 @@ var Field = React.createClass({
                 )
         }
     },
+    setPropObj: function(){
+      this.props.setPropObj({type: "field", fieldId: this.props.field[0].fieldId});
+    },
     render: function () {
         return(
             <div>
@@ -432,7 +447,7 @@ function ItemObject(construct){
   construct = construct || {};
   this.viewLabel = construct.viewLabel || "Step " + itemIterator;
   this.active = construct.type || false;
-  this.itemId = construct.itemId || itemIterator;
+  this.itemId = construct.itemId || shortid.generate();
   this.sections = construct.sections || [new SectionObject()];
   itemIterator++;
 }
