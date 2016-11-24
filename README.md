@@ -21,4 +21,5 @@ The licensing for the software does not include the open-source modules upon whi
 * Babel
 * Node JS
 * jQuery
+
 Each of these modules is copyrighted by their respective authors and subject to the terms enumerated therein.
