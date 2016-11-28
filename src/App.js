@@ -8,6 +8,8 @@ import data from './formBlocks.js';
 import 'animate.css';
 var shortid = require('shortid');
 import $ from "jquery";
+//global.localStorage = require('localStorage')
+var store = require('store');
 //import wizard from './formBlocks.js';
 // var DragDropContext = require('react-dnd').DragDropContext;
 // var HTML5Backend = require('react-dnd-html5-backend');

@@ -15,7 +15,7 @@ This software is copyrighted by [Tecuity Inc.](http://www.tecuity.com) under the
 
 This software may not be replicated for commercial purposes.
 
-The licensing for the software does not include the open-source modules upon which it is derived, including but not limited to:
+The licensing for this software does not include the open-source modules upon which it is derived, including but not limited to:
 * React JS
 * Webpack
 * Babel
